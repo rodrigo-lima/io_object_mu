@@ -64,7 +64,7 @@ class ConfigNode:
                 return
             token_end = script.pos
             key = script.token
-            #print(key,script.line)
+            print(key,script.line,top)
             while script.tokenAvailable(True):
                 script.getToken(True)
                 token_end = script.pos
@@ -74,15 +74,18 @@ class ConfigNode:
                     if script.tokenAvailable(False):
                         script.getLine()
                         value = script.token.strip()
+                        print("  token available -- next line..", value)
                     node.values.append(ConfigValue(key, value, line))
+                    print("-> VALUE [",key,"] = ",value)
                     break
                 elif script.token == '{':
                     new_node = ConfigNode(key, line)
                     ConfigNode.ParseNode(new_node, script, False)
                     node.nodes.append(new_node)
+                    print("-> NODE[",node.name,"] = ",new_node.name)
                     break
                 else:
-                    #cfg_error(script, "unexpected " + script.token)
+                    cfg_error(script, "unexpected " + script.token)
                     key = script.text[token_start:token_end]
         if not top:
             cfg_error(script, "unexpected end of file")
@@ -194,8 +197,9 @@ class ConfigNode:
 if __name__ == "__main__":
     import sys
     for arg in sys.argv[1:]:
-        text = open(arg, "rt").read()
+        text = open(arg.strip(), "rt").read()
         try:
             node = ConfigNode.load(text)
         except ConfigNodeError as e:
             print(arg+e.message)
+        print(node.ToString())

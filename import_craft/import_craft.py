@@ -57,6 +57,9 @@ def import_craft(filepath):
         pname = p.GetValue("part").split("_")[0]
         pos = parse_vector(p.GetValue("pos"))
         rot = parse_quaternion(p.GetValue("rot"))
+        # check if pname is a valid part
+        if pname not in gamedata.parts:
+            raise MuImportError("Craft", f"Part '{pname}' not found in gamedata")
         part = gamedata.parts[pname].get_model()
         if root_pos == None:
             root_pos = pos

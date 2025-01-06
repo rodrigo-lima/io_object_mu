@@ -29,7 +29,7 @@ def recurse_tree(path, func):
     files = os.listdir(path)
     files.sort()
     for f in files:
-        if f[0] in [".", "_"]:
+        if f[0] in ["."]:
             continue
         p = "/".join((path, f))
         if os.path.isdir(p):

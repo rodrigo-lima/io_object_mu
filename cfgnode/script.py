@@ -69,7 +69,15 @@ class Script:
     def getLine(self):
         start = self.pos
         end = start
+        unmatched = 0
         while self.pos < len(self.text):
+            if self.text[self.pos] == "{":
+                unmatched += 1
+            elif self.text[self.pos] == "}":
+                unmatched -= 1
+                if unmatched < 0:
+                    self.pos -= 1
+                    break
             if self.text[self.pos] == "\n":
                 self.line += 1
                 self.pos += 1
